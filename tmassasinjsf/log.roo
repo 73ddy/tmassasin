@@ -1,4 +1,3 @@
-// Spring Roo 1.2.4.RELEASE [rev 75337cf] log opened at 2013-09-08 03:23:57
 project --topLevelPackage com.tmassasin --projectName tmassasinjsf
 
 persistence setup --provider HIBERNATE --database MYSQL
@@ -14,11 +13,4 @@ web jsf setup --implementation APACHE_MYFACES --theme SOUTH_STREET
 web jsf all --package ~.jsf
 service all --interfacePackage ~.service
 addon search spring-roo-addon-typical-security
-addon search security
-// [failed] osgi uninstall --bundleSymbolicName com.xsoftwarelabs.spring.roo.addon.typicalsecurity
-addon remove --bundleSymbolicName com.xsoftwarelabs.spring.roo.addon.typicalsecurity
-hint
-hint general
-help
-exit
-// Spring Roo 1.2.4.RELEASE [rev 75337cf] log closed at 2013-09-08 03:36:57
+

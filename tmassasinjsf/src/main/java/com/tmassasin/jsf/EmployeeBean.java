@@ -1,9 +1,9 @@
 package com.tmassasin.jsf;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+
 import javax.annotation.PostConstruct;
 import javax.el.ELContext;
 import javax.el.ExpressionFactory;
@@ -15,13 +15,9 @@ import javax.faces.component.html.HtmlPanelGrid;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.DateTimeConverter;
 import javax.faces.validator.LengthValidator;
+import javax.faces.validator.RegexValidator;
 
-import com.tmassasin.jsf.util.MessageFactory;
-import com.tmassasin.model.Employee;
-import com.tmassasin.model.TimeLog;
-import com.tmassasin.model.WorkLog;
-import com.tmassasin.service.EmployeeService;
-import org.primefaces.component.calendar.Calendar;
+import org.apache.myfaces.shared.util.renderkit.JsfProperties;
 import org.primefaces.component.inputtext.InputText;
 import org.primefaces.component.inputtextarea.InputTextarea;
 import org.primefaces.component.message.Message;
@@ -30,6 +26,13 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.CloseEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
+
+import com.tmassasin.jsf.constants.JSFConstants;
+import com.tmassasin.jsf.util.MessageFactory;
+import com.tmassasin.model.Employee;
+import com.tmassasin.model.TimeLog;
+import com.tmassasin.model.WorkLog;
+import com.tmassasin.service.EmployeeService;
 
 @ManagedBean(name = "employeeBean")
 @SessionScoped
@@ -142,38 +145,6 @@ public class EmployeeBean implements Serializable {
         
         HtmlPanelGrid htmlPanelGrid = (HtmlPanelGrid) application.createComponent(HtmlPanelGrid.COMPONENT_TYPE);
         
-        HtmlOutputText timeLogsCreateOutput = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
-        timeLogsCreateOutput.setId("timeLogsCreateOutput");
-        timeLogsCreateOutput.setValue("Time Logs:");
-        htmlPanelGrid.getChildren().add(timeLogsCreateOutput);
-        
-        HtmlOutputText timeLogsCreateInput = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
-        timeLogsCreateInput.setId("timeLogsCreateInput");
-        timeLogsCreateInput.setValue("This relationship is managed from the TimeLog side");
-        htmlPanelGrid.getChildren().add(timeLogsCreateInput);
-        
-        Message timeLogsCreateInputMessage = (Message) application.createComponent(Message.COMPONENT_TYPE);
-        timeLogsCreateInputMessage.setId("timeLogsCreateInputMessage");
-        timeLogsCreateInputMessage.setFor("timeLogsCreateInput");
-        timeLogsCreateInputMessage.setDisplay("icon");
-        htmlPanelGrid.getChildren().add(timeLogsCreateInputMessage);
-        
-        HtmlOutputText workLogsCreateOutput = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
-        workLogsCreateOutput.setId("workLogsCreateOutput");
-        workLogsCreateOutput.setValue("Work Logs:");
-        htmlPanelGrid.getChildren().add(workLogsCreateOutput);
-        
-        HtmlOutputText workLogsCreateInput = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
-        workLogsCreateInput.setId("workLogsCreateInput");
-        workLogsCreateInput.setValue("This relationship is managed from the WorkLog side");
-        htmlPanelGrid.getChildren().add(workLogsCreateInput);
-        
-        Message workLogsCreateInputMessage = (Message) application.createComponent(Message.COMPONENT_TYPE);
-        workLogsCreateInputMessage.setId("workLogsCreateInputMessage");
-        workLogsCreateInputMessage.setFor("workLogsCreateInput");
-        workLogsCreateInputMessage.setDisplay("icon");
-        htmlPanelGrid.getChildren().add(workLogsCreateInputMessage);
-        
         OutputLabel usernameCreateOutput = (OutputLabel) application.createComponent(OutputLabel.COMPONENT_TYPE);
         usernameCreateOutput.setFor("usernameCreateInput");
         usernameCreateOutput.setId("usernameCreateOutput");
@@ -222,12 +193,16 @@ public class EmployeeBean implements Serializable {
         emailCreateOutput.setValue("Email:");
         htmlPanelGrid.getChildren().add(emailCreateOutput);
         
-        InputTextarea emailCreateInput = (InputTextarea) application.createComponent(InputTextarea.COMPONENT_TYPE);
+        InputText emailCreateInput = (InputText) application.createComponent(InputText.COMPONENT_TYPE);
         emailCreateInput.setId("emailCreateInput");
         emailCreateInput.setValueExpression("value", expressionFactory.createValueExpression(elContext, "#{employeeBean.employee.email}", String.class));
         LengthValidator emailCreateInputValidator = new LengthValidator();
         emailCreateInputValidator.setMaximum(50);
+        RegexValidator regexValidator = new RegexValidator();
+        regexValidator.setPattern(JSFConstants.EMAIL_PATTERN);
         emailCreateInput.addValidator(emailCreateInputValidator);
+        emailCreateInput.addValidator(regexValidator);
+        emailCreateInput.setValidatorMessage(JSFConstants.INVALID_EMAIL_MSG);
         emailCreateInput.setRequired(true);
         htmlPanelGrid.getChildren().add(emailCreateInput);
         
@@ -328,12 +303,16 @@ public class EmployeeBean implements Serializable {
         emailEditOutput.setValue("Email:");
         htmlPanelGrid.getChildren().add(emailEditOutput);
         
-        InputTextarea emailEditInput = (InputTextarea) application.createComponent(InputTextarea.COMPONENT_TYPE);
+        InputText emailEditInput = (InputText) application.createComponent(InputText.COMPONENT_TYPE);
         emailEditInput.setId("emailEditInput");
         emailEditInput.setValueExpression("value", expressionFactory.createValueExpression(elContext, "#{employeeBean.employee.email}", String.class));
         LengthValidator emailEditInputValidator = new LengthValidator();
         emailEditInputValidator.setMaximum(50);
+        RegexValidator regexValidator = new RegexValidator();
+        regexValidator.setPattern(JSFConstants.EMAIL_PATTERN);
         emailEditInput.addValidator(emailEditInputValidator);
+        emailEditInput.addValidator(regexValidator);
+        emailEditInput.setValidatorMessage(JSFConstants.INVALID_EMAIL_MSG);
         emailEditInput.setRequired(true);
         htmlPanelGrid.getChildren().add(emailEditInput);
         
@@ -354,26 +333,6 @@ public class EmployeeBean implements Serializable {
         
         HtmlPanelGrid htmlPanelGrid = (HtmlPanelGrid) application.createComponent(HtmlPanelGrid.COMPONENT_TYPE);
         
-        HtmlOutputText timeLogsLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
-        timeLogsLabel.setId("timeLogsLabel");
-        timeLogsLabel.setValue("Time Logs:");
-        htmlPanelGrid.getChildren().add(timeLogsLabel);
-        
-        HtmlOutputText timeLogsValue = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
-        timeLogsValue.setId("timeLogsValue");
-        timeLogsValue.setValue("This relationship is managed from the TimeLog side");
-        htmlPanelGrid.getChildren().add(timeLogsValue);
-        
-        HtmlOutputText workLogsLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
-        workLogsLabel.setId("workLogsLabel");
-        workLogsLabel.setValue("Work Logs:");
-        htmlPanelGrid.getChildren().add(workLogsLabel);
-        
-        HtmlOutputText workLogsValue = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
-        workLogsValue.setId("workLogsValue");
-        workLogsValue.setValue("This relationship is managed from the WorkLog side");
-        htmlPanelGrid.getChildren().add(workLogsValue);
-        
         HtmlOutputText usernameLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
         usernameLabel.setId("usernameLabel");
         usernameLabel.setValue("Username:");
@@ -391,7 +350,7 @@ public class EmployeeBean implements Serializable {
         
         HtmlOutputText passwordValue = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
         passwordValue.setId("passwordValue");
-        passwordValue.setValueExpression("value", expressionFactory.createValueExpression(elContext, "#{employeeBean.employee.password}", String.class));
+        passwordValue.setValueExpression("value", expressionFactory.createValueExpression(elContext, "****", String.class));
         htmlPanelGrid.getChildren().add(passwordValue);
         
         HtmlOutputText emailLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
@@ -399,11 +358,9 @@ public class EmployeeBean implements Serializable {
         emailLabel.setValue("Email:");
         htmlPanelGrid.getChildren().add(emailLabel);
         
-        InputTextarea emailValue = (InputTextarea) application.createComponent(InputTextarea.COMPONENT_TYPE);
-        emailValue.setId("emailValue");
-        emailValue.setValueExpression("value", expressionFactory.createValueExpression(elContext, "#{employeeBean.employee.email}", String.class));
-        emailValue.setReadonly(true);
-        emailValue.setDisabled(true);
+        HtmlOutputText emailValue = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+        usernameValue.setId("emailValue");
+        usernameValue.setValueExpression("value", expressionFactory.createValueExpression(elContext, "#{employeeBean.employee.email}", String.class));
         htmlPanelGrid.getChildren().add(emailValue);
         
         HtmlOutputText lastModifiedLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
@@ -412,9 +369,9 @@ public class EmployeeBean implements Serializable {
         htmlPanelGrid.getChildren().add(lastModifiedLabel);
         
         HtmlOutputText lastModifiedValue = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
-        lastModifiedValue.setValueExpression("value", expressionFactory.createValueExpression(elContext, "#{employeeBean.employee.lastModified}", Calendar.class));
+        lastModifiedValue.setValueExpression("value", expressionFactory.createValueExpression(elContext, "#{employeeBean.employee.lastModifiedAsDate}", java.util.Date.class));
         DateTimeConverter lastModifiedValueConverter = (DateTimeConverter) application.createConverter(DateTimeConverter.CONVERTER_ID);
-        lastModifiedValueConverter.setPattern("dd/MM/yyyy");
+        lastModifiedValueConverter.setPattern("MM/dd/yyyy HH:mm");
         lastModifiedValue.setConverter(lastModifiedValueConverter);
         htmlPanelGrid.getChildren().add(lastModifiedValue);
         

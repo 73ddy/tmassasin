@@ -1,6 +1,7 @@
 package com.tmassasin.model;
 import java.io.Serializable;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -206,4 +207,11 @@ public class Employee implements Serializable {
 	public void setLastModified(Calendar lastModified) {
         this.lastModified = lastModified;
     }
+	
+	public Date getlastModifiedAsDate() {
+		if (null != lastModified) {
+			return lastModified.getTime();
+		}
+		return null;
+	}
 }
