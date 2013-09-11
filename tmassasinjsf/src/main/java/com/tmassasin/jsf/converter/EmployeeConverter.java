@@ -24,6 +24,6 @@ public class EmployeeConverter implements javax.faces.convert.Converter, org.spr
     }
 
 	public String getAsString(FacesContext context, UIComponent component, Object value) {
-        return value instanceof Employee ? ((Employee) value).getUsername().toString() : "";
+        return value instanceof Employee ? ((Employee) value).getId().toString() : "";
     }
 }

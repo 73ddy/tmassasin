@@ -1,6 +1,7 @@
 package com.tmassasin.model;
 import java.io.Serializable;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -92,10 +93,10 @@ public class WorkLog implements Serializable {
     @NotNull
     private String request;
 
-	@Column(name = "day_of_log")
-    @Temporal(TemporalType.TIMESTAMP)
-    @DateTimeFormat(style = "MM")
-    private Calendar dayOfLog;
+	@Column(name = "day_of_log", nullable=false)
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(style = "M-")
+    private Date dayOfLog;
 
 	public Employee getEmployee() {
         return employee;
@@ -145,11 +146,11 @@ public class WorkLog implements Serializable {
         this.request = request;
     }
 
-	public Calendar getDayOfLog() {
+	public Date getDayOfLog() {
         return dayOfLog;
     }
 
-	public void setDayOfLog(Calendar dayOfLog) {
+	public void setDayOfLog(Date dayOfLog) {
         this.dayOfLog = dayOfLog;
     }
 
@@ -219,4 +220,11 @@ public class WorkLog implements Serializable {
         this.entityManager.flush();
         return merged;
     }
+	
+	public Date getlastModifiedAsDate() {
+		if (null != lastModified) {
+			return lastModified.getTime();
+		}
+		return null;
+	}
 }

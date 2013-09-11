@@ -14,12 +14,14 @@ import javax.faces.component.html.HtmlPanelGrid;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.DateTimeConverter;
 
+import com.tmassasin.jsf.constants.JSFConstants;
 import com.tmassasin.jsf.converter.EmployeeConverter;
 import com.tmassasin.jsf.util.MessageFactory;
 import com.tmassasin.model.Employee;
 import com.tmassasin.model.TimeLog;
 import com.tmassasin.service.EmployeeService;
 import com.tmassasin.service.TimeLogService;
+
 import org.primefaces.component.autocomplete.AutoComplete;
 import org.primefaces.component.calendar.Calendar;
 import org.primefaces.component.message.Message;
@@ -96,7 +98,7 @@ public class TimeLogBean implements Serializable {
         dataVisible = !allTimeLogs.isEmpty();
         return null;
     }
-
+	
 	public boolean isDataVisible() {
         return dataVisible;
     }
@@ -178,7 +180,8 @@ public class TimeLogBean implements Serializable {
         entryTimeCreateInput.setValueExpression("value", expressionFactory.createValueExpression(elContext, "#{timeLogBean.timeLog.entryTime}", Date.class));
         entryTimeCreateInput.setNavigator(true);
         entryTimeCreateInput.setEffect("slideDown");
-        entryTimeCreateInput.setPattern("MM/dd/yyyy HH:mm");
+        entryTimeCreateInput.setTimeOnly(true);
+        entryTimeCreateInput.setPattern(JSFConstants.TIME_ONLY_FORMAT);
         entryTimeCreateInput.setRequired(false);
         entryTimeCreateInput.setStepMinute(10);
         htmlPanelGrid.getChildren().add(entryTimeCreateInput);
@@ -200,7 +203,8 @@ public class TimeLogBean implements Serializable {
         exitTimeCreateInput.setValueExpression("value", expressionFactory.createValueExpression(elContext, "#{timeLogBean.timeLog.exitTime}", Date.class));
         exitTimeCreateInput.setNavigator(true);
         exitTimeCreateInput.setEffect("slideDown");
-        exitTimeCreateInput.setPattern("MM/dd/yyyy HH:mm");
+        exitTimeCreateInput.setTimeOnly(true);
+        exitTimeCreateInput.setPattern(JSFConstants.TIME_ONLY_FORMAT);
         exitTimeCreateInput.setStepMinute(10);
         exitTimeCreateInput.setRequired(false);
         htmlPanelGrid.getChildren().add(exitTimeCreateInput);
@@ -222,7 +226,7 @@ public class TimeLogBean implements Serializable {
         dayOfLogCreateInput.setValueExpression("value", expressionFactory.createValueExpression(elContext, "#{timeLogBean.timeLog.dayOfLog}", Date.class));
         dayOfLogCreateInput.setNavigator(true);
         dayOfLogCreateInput.setEffect("slideDown");
-        dayOfLogCreateInput.setPattern("dd/MM/yyyy");
+        dayOfLogCreateInput.setPattern(JSFConstants.DATE_ONLY_FORMAT);
         dayOfLogCreateInput.setRequired(true);
         htmlPanelGrid.getChildren().add(dayOfLogCreateInput);
         
@@ -278,7 +282,8 @@ public class TimeLogBean implements Serializable {
         entryTimeEditInput.setValueExpression("value", expressionFactory.createValueExpression(elContext, "#{timeLogBean.timeLog.entryTime}", Date.class));
         entryTimeEditInput.setNavigator(true);
         entryTimeEditInput.setEffect("slideDown");
-        entryTimeEditInput.setPattern("MM/dd/yyyy HH:mm");
+        entryTimeEditInput.setPattern(JSFConstants.TIME_ONLY_FORMAT);
+        entryTimeEditInput.setTimeOnly(true);
         entryTimeEditInput.setStepMinute(10);
         entryTimeEditInput.setRequired(false);
         htmlPanelGrid.getChildren().add(entryTimeEditInput);
@@ -300,7 +305,8 @@ public class TimeLogBean implements Serializable {
         exitTimeEditInput.setValueExpression("value", expressionFactory.createValueExpression(elContext, "#{timeLogBean.timeLog.exitTime}", Date.class));
         exitTimeEditInput.setNavigator(true);
         exitTimeEditInput.setEffect("slideDown");
-        exitTimeEditInput.setPattern("MM/dd/yyyy HH:mm");
+        exitTimeEditInput.setPattern(JSFConstants.TIME_ONLY_FORMAT);
+        exitTimeEditInput.setTimeOnly(true);
         exitTimeEditInput.setStepMinute(10);
         exitTimeEditInput.setRequired(false);
         htmlPanelGrid.getChildren().add(exitTimeEditInput);
@@ -322,7 +328,7 @@ public class TimeLogBean implements Serializable {
         dayOfLogEditInput.setValueExpression("value", expressionFactory.createValueExpression(elContext, "#{timeLogBean.timeLog.dayOfLog}", Date.class));
         dayOfLogEditInput.setNavigator(true);
         dayOfLogEditInput.setEffect("slideDown");
-        dayOfLogEditInput.setPattern("dd/MM/yyyy");
+        dayOfLogEditInput.setPattern(JSFConstants.DATE_ONLY_FORMAT);
         dayOfLogEditInput.setRequired(true);
         htmlPanelGrid.getChildren().add(dayOfLogEditInput);
         
@@ -361,7 +367,7 @@ public class TimeLogBean implements Serializable {
         HtmlOutputText entryTimeValue = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
         entryTimeValue.setValueExpression("value", expressionFactory.createValueExpression(elContext, "#{timeLogBean.timeLog.entryTime}", Date.class));
         DateTimeConverter entryTimeValueConverter = (DateTimeConverter) application.createConverter(DateTimeConverter.CONVERTER_ID);
-        entryTimeValueConverter.setPattern("MM/dd/yyyy HH:mm");
+        entryTimeValueConverter.setPattern(JSFConstants.TIME_ONLY_FORMAT);
         entryTimeValue.setConverter(entryTimeValueConverter);
         htmlPanelGrid.getChildren().add(entryTimeValue);
         
@@ -373,7 +379,7 @@ public class TimeLogBean implements Serializable {
         HtmlOutputText exitTimeValue = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
         exitTimeValue.setValueExpression("value", expressionFactory.createValueExpression(elContext, "#{timeLogBean.timeLog.exitTime}", Date.class));
         DateTimeConverter exitTimeValueConverter = (DateTimeConverter) application.createConverter(DateTimeConverter.CONVERTER_ID);
-        exitTimeValueConverter.setPattern("MM/dd/yyyy HH:mm");
+        exitTimeValueConverter.setPattern(JSFConstants.TIME_ONLY_FORMAT);
         exitTimeValue.setConverter(exitTimeValueConverter);
         htmlPanelGrid.getChildren().add(exitTimeValue);
         
@@ -385,7 +391,7 @@ public class TimeLogBean implements Serializable {
         HtmlOutputText dayOfLogValue = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
         dayOfLogValue.setValueExpression("value", expressionFactory.createValueExpression(elContext, "#{timeLogBean.timeLog.dayOfLog}", Date.class));
         DateTimeConverter dayOfLogValueConverter = (DateTimeConverter) application.createConverter(DateTimeConverter.CONVERTER_ID);
-        dayOfLogValueConverter.setPattern("dd/MM/yyyy");
+        dayOfLogValueConverter.setPattern(JSFConstants.DATE_ONLY_FORMAT);
         dayOfLogValue.setConverter(dayOfLogValueConverter);
         htmlPanelGrid.getChildren().add(dayOfLogValue);
         
@@ -440,6 +446,29 @@ public class TimeLogBean implements Serializable {
 
 	public String persist() {
         String message = "";
+        java.util.Calendar dayOfLogCalendar = java.util.Calendar
+				.getInstance();
+		dayOfLogCalendar.setTime(timeLog.getDayOfLog());
+        if (null != timeLog.getEntryTime()) {
+			java.util.Calendar entryTimeCalendar = java.util.Calendar
+					.getInstance();
+			entryTimeCalendar.setTime(timeLog.getEntryTime());
+			entryTimeCalendar.set(
+					dayOfLogCalendar.get(java.util.Calendar.YEAR),
+					dayOfLogCalendar.get(java.util.Calendar.MONTH),
+					dayOfLogCalendar.get(java.util.Calendar.DAY_OF_MONTH));
+			timeLog.setEntryTime(entryTimeCalendar.getTime());
+        }
+        if (null != timeLog.getExitTime()) {
+			java.util.Calendar exitTimeCalendar = java.util.Calendar
+					.getInstance();
+			exitTimeCalendar.setTime(timeLog.getExitTime());
+			exitTimeCalendar.set(
+					dayOfLogCalendar.get(java.util.Calendar.YEAR),
+					dayOfLogCalendar.get(java.util.Calendar.MONTH),
+					dayOfLogCalendar.get(java.util.Calendar.DAY_OF_MONTH));
+			timeLog.setExitTime(exitTimeCalendar.getTime());
+        }
         if (timeLog.getId() != null) {
             timeLogService.updateTimeLog(timeLog);
             message = "message_successfully_updated";

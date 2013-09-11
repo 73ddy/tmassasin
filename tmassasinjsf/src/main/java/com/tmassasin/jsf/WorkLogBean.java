@@ -3,6 +3,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import javax.annotation.PostConstruct;
 import javax.el.ELContext;
 import javax.el.ExpressionFactory;
@@ -15,12 +16,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.DateTimeConverter;
 import javax.faces.validator.LengthValidator;
 
-import com.tmassasin.jsf.converter.EmployeeConverter;
-import com.tmassasin.jsf.util.MessageFactory;
-import com.tmassasin.model.Employee;
-import com.tmassasin.model.WorkLog;
-import com.tmassasin.service.EmployeeService;
-import com.tmassasin.service.WorkLogService;
 import org.primefaces.component.autocomplete.AutoComplete;
 import org.primefaces.component.calendar.Calendar;
 import org.primefaces.component.inputtext.InputText;
@@ -32,6 +27,14 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.CloseEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
+
+import com.tmassasin.jsf.constants.JSFConstants;
+import com.tmassasin.jsf.converter.EmployeeConverter;
+import com.tmassasin.jsf.util.MessageFactory;
+import com.tmassasin.model.Employee;
+import com.tmassasin.model.WorkLog;
+import com.tmassasin.service.EmployeeService;
+import com.tmassasin.service.WorkLogService;
 
 @Configurable
 @ManagedBean(name = "workLogBean")
@@ -70,11 +73,10 @@ public class WorkLogBean implements Serializable {
 	@PostConstruct
     public void init() {
         columns = new ArrayList<String>();
+        columns.add("employee");
         columns.add("dayDivision");
-        columns.add("comment");
-        columns.add("files");
-        columns.add("lastModified");
         columns.add("request");
+        columns.add("dayOfLog");
     }
 
 	public String getName() {
@@ -359,7 +361,7 @@ public class WorkLogBean implements Serializable {
         LengthValidator filesEditInputValidator = new LengthValidator();
         filesEditInputValidator.setMaximum(1000);
         filesEditInput.addValidator(filesEditInputValidator);
-        filesEditInput.setRequired(true);
+        filesEditInput.setRequired(false);
         htmlPanelGrid.getChildren().add(filesEditInput);
         
         Message filesEditInputMessage = (Message) application.createComponent(Message.COMPONENT_TYPE);
@@ -400,7 +402,7 @@ public class WorkLogBean implements Serializable {
         dayOfLogEditInput.setValueExpression("value", expressionFactory.createValueExpression(elContext, "#{workLogBean.workLog.dayOfLog}", Date.class));
         dayOfLogEditInput.setNavigator(true);
         dayOfLogEditInput.setEffect("slideDown");
-        dayOfLogEditInput.setPattern("dd/MM/yyyy");
+        dayOfLogEditInput.setPattern(JSFConstants.DATE_ONLY_FORMAT);
         dayOfLogEditInput.setRequired(true);
         htmlPanelGrid.getChildren().add(dayOfLogEditInput);
         
@@ -438,6 +440,7 @@ public class WorkLogBean implements Serializable {
         
         HtmlOutputText dayDivisionValue = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
         dayDivisionValue.setValueExpression("value", expressionFactory.createValueExpression(elContext, "#{workLogBean.workLog.dayDivision}", String.class));
+        dayDivisionValue.setStyle("align:right");
         htmlPanelGrid.getChildren().add(dayDivisionValue);
         
         HtmlOutputText commentLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
@@ -449,7 +452,7 @@ public class WorkLogBean implements Serializable {
         commentValue.setId("commentValue");
         commentValue.setValueExpression("value", expressionFactory.createValueExpression(elContext, "#{workLogBean.workLog.comment}", String.class));
         commentValue.setReadonly(true);
-        commentValue.setDisabled(true);
+        commentValue.setAutoResize(false);
         htmlPanelGrid.getChildren().add(commentValue);
         
         HtmlOutputText filesLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
@@ -461,20 +464,8 @@ public class WorkLogBean implements Serializable {
         filesValue.setId("filesValue");
         filesValue.setValueExpression("value", expressionFactory.createValueExpression(elContext, "#{workLogBean.workLog.files}", String.class));
         filesValue.setReadonly(true);
-        filesValue.setDisabled(true);
+        filesValue.setAutoResize(false);
         htmlPanelGrid.getChildren().add(filesValue);
-        
-        HtmlOutputText lastModifiedLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
-        lastModifiedLabel.setId("lastModifiedLabel");
-        lastModifiedLabel.setValue("Last Modified:");
-        htmlPanelGrid.getChildren().add(lastModifiedLabel);
-        
-        HtmlOutputText lastModifiedValue = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
-        lastModifiedValue.setValueExpression("value", expressionFactory.createValueExpression(elContext, "#{workLogBean.workLog.lastModified}", Calendar.class));
-        DateTimeConverter lastModifiedValueConverter = (DateTimeConverter) application.createConverter(DateTimeConverter.CONVERTER_ID);
-        lastModifiedValueConverter.setPattern("dd/MM/yyyy");
-        lastModifiedValue.setConverter(lastModifiedValueConverter);
-        htmlPanelGrid.getChildren().add(lastModifiedValue);
         
         HtmlOutputText requestLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
         requestLabel.setId("requestLabel");
@@ -492,11 +483,23 @@ public class WorkLogBean implements Serializable {
         htmlPanelGrid.getChildren().add(dayOfLogLabel);
         
         HtmlOutputText dayOfLogValue = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
-        dayOfLogValue.setValueExpression("value", expressionFactory.createValueExpression(elContext, "#{workLogBean.workLog.dayOfLog}", Calendar.class));
+        dayOfLogValue.setValueExpression("value", expressionFactory.createValueExpression(elContext, "#{workLogBean.workLog.dayOfLog}", Date.class));
         DateTimeConverter dayOfLogValueConverter = (DateTimeConverter) application.createConverter(DateTimeConverter.CONVERTER_ID);
-        dayOfLogValueConverter.setPattern("dd/MM/yyyy");
+        dayOfLogValueConverter.setPattern(JSFConstants.DATE_ONLY_FORMAT);
         dayOfLogValue.setConverter(dayOfLogValueConverter);
         htmlPanelGrid.getChildren().add(dayOfLogValue);
+        
+        HtmlOutputText lastModifiedLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+        lastModifiedLabel.setId("lastModifiedLabel");
+        lastModifiedLabel.setValue("Last Modified:");
+        htmlPanelGrid.getChildren().add(lastModifiedLabel);
+        
+        HtmlOutputText lastModifiedValue = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+        lastModifiedValue.setValueExpression("value", expressionFactory.createValueExpression(elContext, "#{workLogBean.workLog.lastModifiedAsDate}", Date.class));
+        DateTimeConverter lastModifiedValueConverter = (DateTimeConverter) application.createConverter(DateTimeConverter.CONVERTER_ID);
+        lastModifiedValueConverter.setPattern(JSFConstants.DATE_TIME_FORMAT);
+        lastModifiedValue.setConverter(lastModifiedValueConverter);
+        htmlPanelGrid.getChildren().add(lastModifiedValue);
         
         return htmlPanelGrid;
     }

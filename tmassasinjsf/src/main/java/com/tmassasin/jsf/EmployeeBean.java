@@ -17,9 +17,7 @@ import javax.faces.convert.DateTimeConverter;
 import javax.faces.validator.LengthValidator;
 import javax.faces.validator.RegexValidator;
 
-import org.apache.myfaces.shared.util.renderkit.JsfProperties;
 import org.primefaces.component.inputtext.InputText;
-import org.primefaces.component.inputtextarea.InputTextarea;
 import org.primefaces.component.message.Message;
 import org.primefaces.component.outputlabel.OutputLabel;
 import org.primefaces.context.RequestContext;
@@ -73,7 +71,6 @@ public class EmployeeBean implements Serializable {
     public void init() {
         columns = new ArrayList<String>();
         columns.add("username");
-        columns.add("password");
         columns.add("email");
     }
 
@@ -326,7 +323,7 @@ public class EmployeeBean implements Serializable {
     }
 
 	public HtmlPanelGrid populateViewPanel() {
-        FacesContext facesContext = FacesContext.getCurrentInstance();
+         FacesContext facesContext = FacesContext.getCurrentInstance();
         javax.faces.application.Application application = facesContext.getApplication();
         ExpressionFactory expressionFactory = application.getExpressionFactory();
         ELContext elContext = facesContext.getELContext();
@@ -343,25 +340,16 @@ public class EmployeeBean implements Serializable {
         usernameValue.setValueExpression("value", expressionFactory.createValueExpression(elContext, "#{employeeBean.employee.username}", String.class));
         htmlPanelGrid.getChildren().add(usernameValue);
         
-        HtmlOutputText passwordLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
-        passwordLabel.setId("passwordLabel");
-        passwordLabel.setValue("Password:");
-        htmlPanelGrid.getChildren().add(passwordLabel);
-        
-        HtmlOutputText passwordValue = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
-        passwordValue.setId("passwordValue");
-        passwordValue.setValueExpression("value", expressionFactory.createValueExpression(elContext, "****", String.class));
-        htmlPanelGrid.getChildren().add(passwordValue);
-        
         HtmlOutputText emailLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
         emailLabel.setId("emailLabel");
         emailLabel.setValue("Email:");
         htmlPanelGrid.getChildren().add(emailLabel);
         
         HtmlOutputText emailValue = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
-        usernameValue.setId("emailValue");
-        usernameValue.setValueExpression("value", expressionFactory.createValueExpression(elContext, "#{employeeBean.employee.email}", String.class));
+        emailValue.setId("emailValue");
+        emailValue.setValueExpression("value", expressionFactory.createValueExpression(elContext, "#{employeeBean.employee.email}", String.class));
         htmlPanelGrid.getChildren().add(emailValue);
+        
         
         HtmlOutputText lastModifiedLabel = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
         lastModifiedLabel.setId("lastModifiedLabel");
@@ -371,7 +359,7 @@ public class EmployeeBean implements Serializable {
         HtmlOutputText lastModifiedValue = (HtmlOutputText) application.createComponent(HtmlOutputText.COMPONENT_TYPE);
         lastModifiedValue.setValueExpression("value", expressionFactory.createValueExpression(elContext, "#{employeeBean.employee.lastModifiedAsDate}", java.util.Date.class));
         DateTimeConverter lastModifiedValueConverter = (DateTimeConverter) application.createConverter(DateTimeConverter.CONVERTER_ID);
-        lastModifiedValueConverter.setPattern("MM/dd/yyyy HH:mm");
+        lastModifiedValueConverter.setPattern(JSFConstants.DATE_TIME_FORMAT);
         lastModifiedValue.setConverter(lastModifiedValueConverter);
         htmlPanelGrid.getChildren().add(lastModifiedValue);
         
